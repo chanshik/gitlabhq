@@ -23,7 +23,10 @@ class Notify < ActionMailer::Base
 
   def reassigned_issue_email(recipient_id, issue_id, previous_assignee_id)
     @issue = Issue.find(issue_id)
-    @previous_assignee ||= User.find(previous_assignee_id)
+    @previous_assignee_name = "nobody"
+    unless previous_assignee_id.nil?
+      @previous_assignee_name = User.find(previous_assignee_id).name
+    end
     @project = @issue.project
     mail(to: recipient(recipient_id), subject: subject("changed issue ##{@issue.id}", @issue.title))
   end
